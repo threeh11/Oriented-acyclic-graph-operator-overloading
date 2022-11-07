@@ -10,87 +10,220 @@ protected:
     string race;
     string name;
     string mainColor;
-    string gender;
+    int weight;
 
 public:
     class ElementGraph* pointers[10];
+
+    ElementGraph()
+    {
+        this->typeAnimal = "";
+        this->race = "";
+        this->name = "";
+        this->mainColor = "";
+        this->weight = 0;
+    };
 
     ElementGraph(string typeAnimal,
                  string race,
                  string name,
                  string mainColor,
-                 string gender);
+                 int weight);
 
     string getTypeAnimal() { return this->typeAnimal; };
     string getRace() { return this->race; };
     string getName() { return this->name; };
     string getMainColor() { return this->mainColor; };
-    string getGender() { return this->gender; };
-    int getCountChildGraphs();
+    int getWeight() { return this->weight; };
 
-    void operator = (ElementGraph* graph) {
-        this->typeAnimal = graph->typeAnimal;
-        this->race = graph->race;
-        this->name = graph->name;
-        this->mainColor = graph->mainColor;
-        this->gender = graph->gender;
-    }
+    void setTypeAnimal(string typeAnimal) { this->typeAnimal = typeAnimal; }
+    void setRace(string race) { this->race = race; }
+    void setName(string name) { this->name = name; }
+    void setMainColor(string mainColor) { this->mainColor = mainColor; }
+    void setWeight(int weight) { this->weight = weight; }
 
-    bool operator == (ElementGraph* graph) {
-        if (this->typeAnimal == graph->typeAnimal &&
-            this->race == graph->race &&
-            this->name == graph->name &&
-            this->mainColor == graph->mainColor &&
-            this->gender == graph->gender)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    int getCountChildGraph();
 
-    bool operator != (ElementGraph* graph) {
-        if (this->typeAnimal != graph->typeAnimal ||
-            this->race != graph->race ||
-            this->name != graph->name ||
-            this->mainColor != graph->mainColor ||
-            this->gender != graph->gender)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    //Перегрузки
+    // присваивание одного элемента структуры данных другому
+    ElementGraph* operator = (ElementGraph& graph);
+    // сравнение на равенство элементов структуры
+    bool operator == (ElementGraph& graph);
+    bool operator != (ElementGraph& grpah);
+    // сравнение элементов структуры данных
+    bool operator < (ElementGraph& graph);
+    bool operator <= (ElementGraph& graph);
+    bool operator > (ElementGraph& graph);
+    bool operator >= (ElementGraph& graph);
+    // ввод из потока элементов структуры данных
+    friend std::istream& operator >> (std::istream& in, ElementGraph* graph);
+    // вывод в поток элементов структуры данных
+    friend std::ostream& operator << (std::ostream& out, ElementGraph* graph);
 };
 
 ElementGraph::ElementGraph(string typeAnimal,
                            string race,
                            string name,
                            string mainColor,
-                           string gender)
+                           int weight)
 {
 
     this->typeAnimal = typeAnimal;
     this->race = race;
     this->name = name;
     this->mainColor = mainColor;
-    this->gender = gender;
+    this->weight = weight;
 
     for (int i = 0; i < 10; i++)
     {
         this->pointers[i] = NULL;
     }
-
-    cout << "---------------------------------------------------------------" << endl;
-    cout << "               Создан граф с адресом {{" << this << "}}       " << endl;
-    cout << "---------------------------------------------------------------" << endl;
 }
 
-int ElementGraph::getCountChildGraphs()
+ElementGraph* ElementGraph::operator = (ElementGraph& graph)
+{
+    this->typeAnimal = graph.typeAnimal;
+    this->race = graph.race;
+    this->name = graph.name;
+    this->mainColor = graph.mainColor;
+    this->weight = graph.weight;
+    
+    return this;
+}
+
+bool ElementGraph::operator == (ElementGraph &graph) 
+{
+    if (this->typeAnimal == graph.typeAnimal &&
+        this->race == graph.race &&
+        this->name == graph.name &&
+        this->mainColor == graph.mainColor &&
+        this->weight == graph.weight)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ElementGraph::operator != (ElementGraph& graph) 
+{
+    if (this->typeAnimal != graph.typeAnimal ||
+        this->race != graph.race ||
+        this->name != graph.name ||
+        this->mainColor != graph.mainColor ||
+        this->weight != graph.weight)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ElementGraph::operator < (ElementGraph& graph)
+{
+    if ((graph.getTypeAnimal() == "Собака" || graph.getTypeAnimal() == "Пес") &&
+        (this->typeAnimal == "Кот" || this->typeAnimal == "Кошка"))
+    {
+        return true;
+    }
+    else if (this->weight < graph.getWeight())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ElementGraph::operator <= (ElementGraph& graph)
+{
+    if ((graph.getTypeAnimal() == "Собака" || graph.getTypeAnimal() == "Пес") &&
+        (this->typeAnimal == "Кот" || this->typeAnimal == "Кошка"))
+    {
+        return true;
+    }
+    else if (this->weight <= graph.getWeight())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ElementGraph::operator > (ElementGraph& graph)
+{
+    if ((graph.getTypeAnimal() == "Собака" || graph.getTypeAnimal() == "Пес") &&
+        (this->typeAnimal == "Кот" || this->typeAnimal == "Кошка"))
+    {
+        return false;
+    }
+    else if (this->weight > graph.getWeight())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ElementGraph::operator >= (ElementGraph& graph)
+{
+    if ((graph.getTypeAnimal() == "Собака" || graph.getTypeAnimal() == "Пес") &&
+        (this->typeAnimal == "Кот" || this->typeAnimal == "Кошка"))
+    {
+        return false;
+    }
+    else if (this->weight >= graph.getWeight())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+std::istream& operator >> (std::istream& in, ElementGraph* graph)
+{
+    cout << "Тип, Порода, Имя, Преобладающий цвет, вес" << endl;
+    string typeAnimal, race, name, mainColor;
+    int weight;
+
+    in >> typeAnimal;
+    in >> race;
+    in >> name;
+    in >> mainColor;
+    in >> weight;
+
+    graph->setTypeAnimal(typeAnimal);
+    graph->setRace(race);
+    graph->setName(name);
+    graph->setMainColor(mainColor);
+    graph->setWeight(weight);
+
+    return in;
+}
+
+std::ostream& operator << (std::ostream& out, ElementGraph* graph)
+{
+    out << "Тип домашнего животного: " << graph->getTypeAnimal() << endl;
+    out << "Порода домашнего животного: " << graph->getRace() << endl;
+    out << "Имя: " << graph->getName() << endl;
+    out << "Пребладающий цвет: " << graph->getMainColor() << endl;
+    out << "Вес: " << graph->getWeight() << endl;
+
+    return out;
+}
+
+int ElementGraph::getCountChildGraph()
 {
     int count = 0;
 
@@ -118,6 +251,7 @@ public:
 
     void create();
     int amountGraphs(class ElementGraph* graph);
+    int amountWeight(class ElementGraph* graph);
     void addGraphTo(int to);
     void removeGraph(class ElementGraph* graph);
     void clearPointers(class ElementGraph* deletedNow);
@@ -131,9 +265,21 @@ public:
     class ElementGraph* getStart() { return this->start; }
     class ElementGraph* getNow() { return this->now; }
     class ElementGraph* getBefore() { return this->before; }
+
+    //Перегрузки
+    //присваивание одной структуры данных другой
+    Graphs* operator = (Graphs* structGraph);
+    //сравнение элементов структуры данных
+    bool operator < (Graphs& structGraph);
+    bool operator <= (Graphs& structGraph);
+    bool operator > (Graphs& structGraph);
+    bool operator >= (Graphs& structGraph);
+    //сравнение на равенство структур данных
+    bool operator == (Graphs& structGraph);
+    bool operator != (Graphs& structGraph);
 };
 
-Graphs :: ~Graphs()
+Graphs::~Graphs()
 {
     this->removeGraph(this->start);
 }
@@ -145,10 +291,144 @@ Graphs::Graphs()
     this->before = NULL;
 }
 
+Graphs* Graphs::operator = (Graphs* structGraph)
+{
+    this->start = structGraph->getStart();
+    return this;
+}
+
+bool Graphs::operator < (Graphs& structGraph)
+{
+    int countChildFirstStruct = 0;
+    int countChildSecondStruct = 0;
+    if (this->start->getCountChildGraph() < structGraph.getStart()->getCountChildGraph())
+    {
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            countChildFirstStruct += this->start->pointers[i]->getCountChildGraph();
+            countChildSecondStruct += structGraph.getStart()->pointers[i]->getCountChildGraph();
+        }
+        if (countChildFirstStruct < countChildSecondStruct)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool Graphs::operator <= (Graphs& structGraph)
+{
+    int countChildFirstStruct = 0;
+    int countChildSecondStruct = 0;
+    if (this->start->getCountChildGraph() <= structGraph.getStart()->getCountChildGraph())
+    {
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            countChildFirstStruct += this->start->pointers[i]->getCountChildGraph();
+            countChildSecondStruct += structGraph.getStart()->pointers[i]->getCountChildGraph();
+        }
+        if (countChildFirstStruct <= countChildSecondStruct)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool Graphs::operator > (Graphs& structGraph)
+{
+    int countChildFirstStruct = 0;
+    int countChildSecondStruct = 0;
+    if (this->start->getCountChildGraph() > structGraph.getStart()->getCountChildGraph())
+    {
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            countChildFirstStruct += this->start->pointers[i]->getCountChildGraph();
+            countChildSecondStruct += structGraph.getStart()->pointers[i]->getCountChildGraph();
+        }
+        if (countChildFirstStruct > countChildSecondStruct)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool Graphs::operator >= (Graphs& structGraph)
+{
+    int countChildFirstStruct = 0;
+    int countChildSecondStruct = 0;
+    if (this->start->getCountChildGraph() >= structGraph.getStart()->getCountChildGraph())
+    {
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            countChildFirstStruct += this->start->pointers[i]->getCountChildGraph();
+            countChildSecondStruct += structGraph.getStart()->pointers[i]->getCountChildGraph();
+        }
+        if (countChildFirstStruct >= countChildSecondStruct)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+bool Graphs::operator == (Graphs& structGraph)
+{
+    if (this->amountWeight(this->start) == structGraph.amountWeight(structGraph.getStart()))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Graphs::operator != (Graphs& structGraph)
+{
+    if (this->amountWeight(this->start) != structGraph.amountWeight(structGraph.getStart()))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 void Graphs::create()
 {
-    string typeAnimal, race, name,
-        mainColor, gender;
+    string typeAnimal, race, name, mainColor;
+    int weight;
 
     cout << "---------------------------------------------------------------" << endl;
     cout << "|                     Заполняем граф...                       |" << endl;
@@ -162,12 +442,12 @@ void Graphs::create()
     cin >> name;
     cout << "Введите преоблодающий цвет домашнего животного: ";
     cin >> mainColor;
-    cout << "Введите пол домашнего животного: ";
-    cin >> gender;
+    cout << "Введите вес домашнего животного: ";
+    cin >> weight;
 
     this->start = new ElementGraph(
         typeAnimal, race, name,
-        mainColor, gender
+        mainColor, weight
     );
 
     this->now = this->start;
@@ -193,11 +473,30 @@ int Graphs::amountGraphs(class ElementGraph* graph)
     return count;
 }
 
+int Graphs::amountWeight(class ElementGraph* graph)
+{
+    int weight = 0;
+
+    if (graph == NULL)
+    {
+        return 0;
+    }
+    else if (graph != NULL)
+    {
+        weight += graph->getWeight();
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        weight += amountWeight(graph->pointers[i]);
+    }
+    return weight;
+}
+
 void Graphs::addGraphTo(int to)
 {
     // to - 1 к старту, to - 2 к текущему графу
-    string typeAnimal, race, name,
-        mainColor, gender;
+    string typeAnimal, race, name, mainColor;
+    int weight;
 
     cout << "---------------------------------------------------------------" << endl;
     cout << "|                     Заполняем граф...                       |" << endl;
@@ -211,12 +510,12 @@ void Graphs::addGraphTo(int to)
     cin >> name;
     cout << "Введите преоблодающий цвет домашнего животного: ";
     cin >> mainColor;
-    cout << "Введите пол домашнего животного: ";
-    cin >> gender;
+    cout << "Введите вес домашнего животного: ";
+    cin >> weight;
 
     class ElementGraph* freshGraph = new ElementGraph(
         typeAnimal, race, name,
-        mainColor, gender
+        mainColor, weight
     );
 
     if (to == 1)
@@ -397,7 +696,7 @@ void Graphs::getValue()
     cout << "Порода домашнего животного: " << this->now->getRace() << endl;
     cout << "Имя домашнего животного: " << this->now->getName() << endl;
     cout << "Преоблодающий цвет домашнего животного: " << this->now->getMainColor() << endl;
-    cout << "Пол домашнего животного: " << this->now->getGender() << endl;
+    cout << "Вес домашнего животного: " << this->now->getWeight() << endl;
     cout << "---------------------------------------------------------------" << endl;
     cout << endl;
 }
@@ -433,4 +732,3 @@ int getTools()
     cin >> numberTool;
     return numberTool;
 }
-
